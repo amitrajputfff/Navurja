@@ -1,9 +1,69 @@
-import { ArrowRight } from "lucide-react";
-import { Reveal, RevealGroup } from "@/components/reveal";
-import { StaggerItem } from "@/components/stagger-item";
+"use client";
+
+import Image from "next/image";
+import { Cards } from "@/blocks/interface-crafts-cards";
+import { Reveal } from "@/components/reveal";
 import { SOLUTIONS } from "@/lib/constants";
 
+const CARD_STYLES = [
+  {
+    className: "bg-nav-primary [&_h2]:text-white",
+    image: "/solution-restaurants.jpg",
+    config: { y: -20, rotate: -15, zIndex: 2 },
+  },
+  {
+    className: "bg-nav-oil-gold [&_h2]:text-nav-deep-green [&_p]:text-nav-deep-green/80",
+    image: "/solution-hotels.jpg",
+    config: { y: 20, rotate: 8, zIndex: 3 },
+  },
+  {
+    className: "bg-nav-mint [&_h2]:text-nav-primary [&_p]:text-nav-dark-text/80",
+    image: "/solution-cloud-kitchens.jpg",
+    config: { y: -80, rotate: -5, zIndex: 4 },
+  },
+  {
+    className: "bg-nav-green [&_h2]:text-white",
+    image: "/solution-caterers.jpg",
+    config: { y: 20, rotate: 12, zIndex: 5 },
+  },
+  {
+    className: "bg-nav-deep-green [&_h2]:text-white",
+    image: "/solution-food-businesses.jpg",
+    config: { y: 20, rotate: -5, zIndex: 6 },
+  },
+  {
+    className: "bg-white ring-1 ring-nav-light-green [&_h2]:text-nav-primary [&_p]:text-nav-dark-text/80",
+    image: "/solution-commercial-kitchens.jpg",
+    config: { y: -30, rotate: 16, zIndex: 7 },
+  },
+];
+
 export function SolutionsSection() {
+  const cards = SOLUTIONS.map(({ title, description, icon: Icon }, index) => {
+    const style = CARD_STYLES[index];
+    return {
+      title,
+      description,
+      className: style.className,
+      config: style.config,
+      skeleton: (
+        <div className="relative h-50 w-full overflow-hidden rounded-xl">
+          <Image
+            src={style.image}
+            alt=""
+            fill
+            sizes="300px"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+          <span className="absolute top-2.5 left-2.5 flex size-8 items-center justify-center rounded-full bg-white/90 text-nav-primary">
+            <Icon className="size-4" strokeWidth={1.75} />
+          </span>
+        </div>
+      ),
+    };
+  });
+
   return (
     <section id="solutions" className="py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
@@ -14,37 +74,14 @@ export function SolutionsSection() {
           <h2 className="mt-3 text-balance text-[clamp(1.875rem,2.5vw+1rem,3rem)] font-bold tracking-tight text-nav-dark-text">
             Built around how your kitchen works.
           </h2>
+          <p className="mt-4 text-sm text-nav-muted">
+            Tap a card to see how NavUrja fits your business.
+          </p>
         </Reveal>
 
-        <RevealGroup
-          staggerChildren={0.08}
-          className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {SOLUTIONS.map(({ title, description, icon: Icon }) => (
-            <StaggerItem
-              key={title}
-              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-nav-light-green hover:shadow-xl hover:shadow-nav-primary/10"
-            >
-              <div
-                aria-hidden
-                className="absolute -top-10 -right-10 size-32 rounded-full bg-gradient-to-br from-nav-oil-gold/0 to-nav-green/0 opacity-0 blur-2xl transition-opacity duration-300 group-hover:from-nav-oil-gold/20 group-hover:to-nav-green/20 group-hover:opacity-100"
-              />
-              <div className="relative flex size-12 items-center justify-center rounded-xl bg-nav-mint text-nav-primary transition-transform duration-300 group-hover:scale-110">
-                <Icon className="size-5.5" strokeWidth={1.5} />
-              </div>
-              <h3 className="relative mt-5 text-lg font-semibold text-nav-dark-text">
-                {title}
-              </h3>
-              <p className="relative mt-1.5 text-sm text-nav-muted">
-                {description}
-              </p>
-              <div className="relative mt-5 flex items-center gap-1.5 text-sm font-medium text-nav-primary">
-                Learn more
-                <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-              </div>
-            </StaggerItem>
-          ))}
-        </RevealGroup>
+        <div className="mt-4">
+          <Cards cards={cards} />
+        </div>
       </div>
     </section>
   );

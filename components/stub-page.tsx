@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
-import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { QuickDock } from "@/components/quick-dock";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteLogo } from "@/components/site-logo";
 
 export function StubPage({
   eyebrow,
@@ -13,9 +15,8 @@ export function StubPage({
 }) {
   return (
     <>
-      <Navbar />
       <main className="flex-1">
-        <section className="mx-auto max-w-3xl px-6 pt-40 pb-28">
+        <section className="mx-auto max-w-3xl px-6 pt-24 pb-28">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-nav-green">
             {eyebrow}
           </p>
@@ -26,6 +27,9 @@ export function StubPage({
         </section>
       </main>
       <Footer />
+      <QuickDock />
+      <ThemeToggle />
+      <SiteLogo />
     </>
   );
 }

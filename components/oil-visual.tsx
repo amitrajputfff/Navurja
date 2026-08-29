@@ -11,11 +11,6 @@ import {
 } from "motion/react";
 import { usePointer } from "@/hooks/use-pointer";
 
-const DROPLET_PATH_A =
-  "M200,60 C260,140 300,200 300,260 C300,300 254,340 200,340 C146,340 100,300 100,260 C100,200 140,140 200,60 Z";
-const DROPLET_PATH_B =
-  "M200,58 C264,144 306,202 302,262 C300,304 252,344 200,344 C148,344 98,302 98,260 C96,198 138,142 200,58 Z";
-
 const PARTICLE_COLORS: [string, string, string] = ["#8a978f", "#D9A441", "#5FAF72"];
 
 type Particle = {
@@ -27,12 +22,12 @@ type Particle = {
   size: number;
 };
 
-const PARTICLES: Particle[] = Array.from({ length: 8 }, (_, i) => ({
+const PARTICLES: Particle[] = Array.from({ length: 7 }, (_, i) => ({
   id: i,
-  radius: 172 + ((i * 37) % 26),
-  yFactor: 0.52 + ((i % 3) * 0.03),
-  phase: (Math.PI * 2 * i) / 8,
-  speed: 0.28 + (i % 4) * 0.04,
+  radius: 178 + ((i * 31) % 22),
+  yFactor: 0.58 + ((i % 3) * 0.03),
+  phase: (Math.PI * 2 * i) / 7,
+  speed: 0.24 + (i % 4) * 0.035,
   size: 3 + (i % 3),
 }));
 
@@ -60,7 +55,7 @@ function OrbitParticle({
   const fill = useTransform(progress, [0, 0.5, 1], PARTICLE_COLORS);
   const opacity = useTransform(
     angle,
-    (a) => 0.55 + 0.45 * Math.max(0, Math.sin(a))
+    (a) => 0.5 + 0.5 * Math.max(0, Math.sin(a))
   );
 
   return (
@@ -70,6 +65,7 @@ function OrbitParticle({
       r={particle.size}
       fill={fill}
       style={{ opacity }}
+      filter="url(#particleGlow)"
     />
   );
 }
@@ -89,8 +85,9 @@ export function OilVisual({
     globalT.set(time / 1000);
   });
 
-  const rotateX = useTransform(pointerY, [-1, 1], [7, -7]);
-  const rotateY = useTransform(pointerX, [-1, 1], [-7, 7]);
+  const rotateX = useTransform(pointerY, [-1, 1], [8, -8]);
+  const rotateY = useTransform(pointerX, [-1, 1], [-8, 8]);
+  const swirlRotate = useTransform(globalT, (t) => t * 9);
 
   const fallbackZero = useMotionValue(0);
   const scrollProgress = progress ?? fallbackZero;
@@ -107,102 +104,112 @@ export function OilVisual({
     >
       <div
         aria-hidden
-        className="absolute inset-[6%] -z-10 rounded-full bg-nav-oil-gold/25 blur-[70px]"
+        className="absolute inset-[8%] -z-10 rounded-full bg-nav-oil-gold/20 blur-[70px]"
       />
       <div
         aria-hidden
-        className="absolute inset-[14%] -z-10 rounded-full bg-nav-green/25 blur-[80px]"
+        className="absolute inset-[16%] -z-10 rounded-full bg-nav-green/25 blur-[85px]"
       />
 
       <motion.div
         style={
           prefersReducedMotion
             ? undefined
-            : { scale, y: translateY, opacity: sceneOpacity, perspective: 1000 }
+            : { scale, y: translateY, opacity: sceneOpacity, perspective: 1200 }
         }
         className="relative h-full w-full"
       >
-        <motion.svg
-          viewBox="0 0 400 400"
-          className="h-full w-full overflow-visible"
+        <motion.div
           style={
             prefersReducedMotion
               ? undefined
               : { rotateX, rotateY, transformStyle: "preserve-3d" }
           }
-          role="img"
-          aria-label="An illustration of a golden oil droplet with particles orbiting it, symbolizing used cooking oil transforming into renewable energy."
+          className="relative h-full w-full"
         >
-          <defs>
-            <linearGradient id="dropletGradient" x1="0" y1="0" x2="0.15" y2="1">
-              <stop offset="0%" stopColor="#073B2A" />
-              <stop offset="42%" stopColor="#0B3D2E" />
-              <stop offset="100%" stopColor="#D9A441" />
-            </linearGradient>
-            <radialGradient id="rimGradient" cx="50%" cy="28%" r="75%">
-              <stop offset="0%" stopColor="#EAF7ED" stopOpacity="0.85" />
-              <stop offset="100%" stopColor="#D9A441" stopOpacity="0" />
-            </radialGradient>
-            <filter id="softBlur" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="6" />
-            </filter>
-          </defs>
+          {/* Orbit ring + particles */}
+          <svg
+            viewBox="0 0 400 400"
+            className="absolute inset-0 h-full w-full overflow-visible"
+            aria-hidden
+          >
+            <defs>
+              <filter id="particleGlow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="1.6" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <circle
+              cx={200}
+              cy={200}
+              r={187}
+              fill="none"
+              stroke="var(--color-nav-light-green)"
+              strokeOpacity={0.4}
+              strokeDasharray="1.5 11"
+              strokeLinecap="round"
+            />
+            {!prefersReducedMotion &&
+              particles.map((p) => (
+                <OrbitParticle key={p.id} particle={p} globalT={globalT} />
+              ))}
+          </svg>
 
-          <circle
-            cx={200}
-            cy={200}
-            r={183}
-            fill="none"
-            stroke="var(--color-nav-light-green)"
-            strokeOpacity={0.45}
-            strokeDasharray="1.5 11"
-            strokeLinecap="round"
-          />
+          {/* Energy orb */}
+          <div
+            className="absolute inset-[19%] overflow-hidden rounded-full shadow-[0_30px_90px_-20px_rgba(11,61,46,0.45)]"
+            role="img"
+            aria-label="A glowing sphere of swirling green and gold energy, representing used cooking oil transforming into renewable power."
+          >
+            <motion.div
+              aria-hidden
+              className="absolute inset-[-40%]"
+              style={
+                prefersReducedMotion
+                  ? undefined
+                  : { rotate: swirlRotate }
+              }
+              initial={false}
+            >
+              <div
+                className="h-full w-full"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, #073B2A 0deg, #0B3D2E 70deg, #5FAF72 150deg, #D9A441 230deg, #073B2A 300deg, #073B2A 360deg)",
+                }}
+              />
+            </motion.div>
 
-          <motion.path
-            d={DROPLET_PATH_A}
-            fill="none"
-            stroke="url(#rimGradient)"
-            strokeWidth={2.5}
-            opacity={0.6}
-            filter="url(#softBlur)"
-            style={{ transformOrigin: "200px 200px", scale: 1.035 }}
-            animate={
-              prefersReducedMotion
-                ? undefined
-                : { d: [DROPLET_PATH_A, DROPLET_PATH_B, DROPLET_PATH_A] }
-            }
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          />
+            {/* Sphere shading for depth */}
+            <div
+              aria-hidden
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 34%), radial-gradient(circle at 68% 78%, rgba(7,59,42,0.55) 0%, rgba(7,59,42,0) 55%), radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.35) 100%)",
+              }}
+            />
 
-          <motion.path
-            d={DROPLET_PATH_A}
-            fill="url(#dropletGradient)"
-            animate={
-              prefersReducedMotion
-                ? undefined
-                : { d: [DROPLET_PATH_A, DROPLET_PATH_B, DROPLET_PATH_A] }
-            }
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          />
+            {/* Specular highlight */}
+            <div
+              aria-hidden
+              className="absolute top-[14%] left-[18%] h-[26%] w-[26%] rounded-full bg-white/70 blur-xl"
+            />
+            <div
+              aria-hidden
+              className="absolute top-[20%] left-[24%] h-[7%] w-[7%] rounded-full bg-white/90 blur-[2px]"
+            />
 
-          <ellipse
-            cx={165}
-            cy={150}
-            rx={34}
-            ry={52}
-            fill="white"
-            opacity={0.28}
-            filter="url(#softBlur)"
-            transform="rotate(-18 165 150)"
-          />
-          <ellipse cx={178} cy={122} rx={9} ry={14} fill="white" opacity={0.55} />
-
-          {!prefersReducedMotion &&
-            particles.map((p) => (
-              <OrbitParticle key={p.id} particle={p} globalT={globalT} />
-            ))}
-        </motion.svg>
+            {/* Rim light */}
+            <div
+              aria-hidden
+              className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/25"
+            />
+          </div>
+        </motion.div>
       </motion.div>
     </div>
   );

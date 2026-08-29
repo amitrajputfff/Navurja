@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <defs>
+    <linearGradient id="oldBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EDEEEA"/>
+      <stop offset="100%" stop-color="#DADCD5"/>
+    </linearGradient>
+    <linearGradient id="oldOil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8C8A7E"/>
+      <stop offset="100%" stop-color="#6B6A5F"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="800" fill="url(#oldBg)"/>
+
+  <!-- counter line -->
+  <rect x="0" y="360" width="800" height="18" fill="#C7C8C0"/>
+
+  <!-- tipped canister -->
+  <g transform="translate(230,230) rotate(28)">
+    <rect x="-60" y="-40" width="120" height="150" rx="14" fill="#A9AA9F"/>
+    <rect x="-60" y="-40" width="120" height="34" rx="14" fill="#8F9086"/>
+    <rect x="-16" y="-70" width="32" height="36" rx="6" fill="#8F9086"/>
+  </g>
+
+  <!-- pour stream -->
+  <path d="M300 300 C 330 340, 340 370, 355 400 C 368 425, 372 450, 368 470" stroke="url(#oldOil)" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- drain funnel -->
+  <g transform="translate(400,470)">
+    <path d="M-90 0 L90 0 L34 90 L-34 90 Z" fill="#B8B9B1"/>
+    <rect x="-16" y="90" width="32" height="60" fill="#B0B1A9"/>
+    <ellipse cx="0" cy="150" rx="16" ry="6" fill="#9A9B93"/>
+  </g>
+
+  <!-- drips continuing down, fading = waste -->
+  <path d="M400 630 C 396 660, 404 690, 400 715" stroke="#9B9C93" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="400" cy="740" r="7" fill="#9B9C93" opacity="0.35"/>
+
+  <!-- small waste marker -->
+  <g transform="translate(560,610)" opacity="0.8">
+    <circle r="34" fill="#CBCCC4"/>
+    <path d="M-12 -3 L12 3 M-12 3 L12 -3" stroke="#6B6A5F" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

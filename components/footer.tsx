@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/newsletter-form";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { LinkedinIcon, InstagramIcon, YoutubeIcon, XIcon } from "@/components/social-icons";
 import { FOOTER_COLUMNS } from "@/lib/constants";
 
@@ -13,17 +14,17 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-nav-deep-green pt-20">
+    <footer id="site-footer" className="relative overflow-hidden bg-nav-deep-green pt-20">
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>
             <Link href="#top" className="flex items-center gap-2">
               <Image
-                src="/logo.png"
+                src="/logo-icon.png"
                 alt="NavUrja"
                 width={30}
                 height={30}
-                className="h-7 w-7 object-contain"
+                className="h-7 w-7 scale-125 object-contain"
               />
               <span className="text-base font-semibold tracking-tight text-white">
                 NavUrja
@@ -95,14 +96,9 @@ export function Footer() {
 
       <div
         aria-hidden
-        className="pointer-events-none relative -mt-4 h-28 select-none overflow-hidden sm:h-36 lg:h-44"
+        className="relative -mt-6 h-32 select-none sm:h-40 lg:h-48"
       >
-        <span
-          className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-bold text-white/[0.05]"
-          style={{ fontSize: "clamp(5rem, 16vw, 12rem)", letterSpacing: "-0.02em" }}
-        >
-          NAVURJA
-        </span>
+        <TextHoverEffect text="NAVURJA" />
       </div>
     </footer>
   );

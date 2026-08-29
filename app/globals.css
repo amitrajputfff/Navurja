@@ -7,9 +7,13 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans);
+  --font-heading:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    var(--font-geist-sans), system-ui, sans-serif;
 
   /* NavUrja brand tokens */
   --color-nav-primary: var(--nav-primary);
@@ -105,37 +109,44 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  /* Most NavUrja brand tokens are deliberately NOT overridden here — they're
+     fixed brand colors (dark green CTAs, footer, etc. stay the same
+     regardless of site theme). Only the body-text tokens invert, since their
+     whole job is to stay readable against whatever the background is. */
+  --nav-dark-text: #eaf7ed;
+  --nav-muted: #9fb3a8;
+
+  --background: #08150f;
+  --foreground: #eaf7ed;
+  --card: #0d1f17;
+  --card-foreground: #eaf7ed;
+  --popover: #0d1f17;
+  --popover-foreground: #eaf7ed;
+  --primary: #bfe7c8;
+  --primary-foreground: #08150f;
+  --secondary: #123127;
+  --secondary-foreground: #bfe7c8;
+  --muted: #123127;
+  --muted-foreground: #9fb3a8;
+  --accent: #1a4030;
+  --accent-foreground: #bfe7c8;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --border: color-mix(in oklab, white 12%, transparent);
+  --input: color-mix(in oklab, white 15%, transparent);
+  --ring: #5faf72;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: #0d1f17;
+  --sidebar-foreground: #eaf7ed;
+  --sidebar-primary: #bfe7c8;
+  --sidebar-primary-foreground: #08150f;
+  --sidebar-accent: #123127;
+  --sidebar-accent-foreground: #bfe7c8;
+  --sidebar-border: color-mix(in oklab, white 12%, transparent);
+  --sidebar-ring: #5faf72;
 }
 
 @layer base {
@@ -157,6 +168,12 @@
     -webkit-backdrop-filter: blur(20px) saturate(140%);
     border: 1px solid color-mix(in oklab, white 45%, transparent);
     box-shadow: 0 8px 32px -8px color-mix(in oklab, var(--nav-primary) 18%, transparent);
+  }
+
+  .dark .glass {
+    background: color-mix(in oklab, var(--nav-mint) 55%, transparent);
+    border: 1px solid color-mix(in oklab, white 14%, transparent);
+    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.45);
   }
 
   .glass-dark {
@@ -188,4 +205,8 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+  ::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
 }

@@ -1,5 +1,6 @@
-import { Reveal, RevealGroup } from "@/components/reveal";
-import { StaggerItem } from "@/components/stagger-item";
+import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/reveal";
+import { Highlighter } from "@/components/ui/highlighter";
 import { WHY_NAVURJA } from "@/lib/constants";
 
 export function WhyNavurja() {
@@ -11,28 +12,39 @@ export function WhyNavurja() {
             Better for your business.
             <br />
             Better for the{" "}
-            <span className="text-nav-green">planet</span>.
+            <Highlighter action="highlight" color="#BFE7C8" padding={4} isView>
+              <span className="text-nav-primary">planet</span>
+            </Highlighter>
+            .
           </h2>
         </Reveal>
 
-        <RevealGroup
-          staggerChildren={0.08}
-          className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {WHY_NAVURJA.map(({ title, description, icon: Icon }) => (
-            <StaggerItem key={title} className="flex items-start gap-4">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-background text-nav-primary ring-1 ring-border">
-                <Icon className="size-5" strokeWidth={1.5} />
+        <div className="relative z-10 mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {WHY_NAVURJA.map(({ title, description, icon: Icon }, index) => (
+            <div
+              key={title}
+              className={cn(
+                "group/feature relative flex flex-col border-border/70 py-10 lg:border-r",
+                (index === 0 || index === 3) && "lg:border-l",
+                index < 3 && "lg:border-b"
+              )}
+            >
+              <div className="pointer-events-none absolute inset-0 h-full w-full bg-gradient-to-b from-nav-mint to-transparent opacity-0 transition duration-300 group-hover/feature:opacity-100" />
+              <div className="relative z-10 mb-4 px-8 text-nav-primary">
+                <Icon className="size-6" strokeWidth={1.5} />
               </div>
-              <div>
-                <h3 className="text-base font-semibold text-nav-dark-text">
+              <div className="relative z-10 mb-2 px-8 text-lg font-semibold">
+                <div className="absolute inset-y-0 left-0 h-6 w-1 origin-center rounded-tr-full rounded-br-full bg-nav-light-green transition-all duration-300 group-hover/feature:h-8 group-hover/feature:bg-nav-green" />
+                <span className="inline-block text-nav-dark-text transition-transform duration-300 group-hover/feature:translate-x-2">
                   {title}
-                </h3>
-                <p className="mt-1 text-sm text-nav-muted">{description}</p>
+                </span>
               </div>
-            </StaggerItem>
+              <p className="relative z-10 max-w-xs px-8 text-sm text-nav-muted">
+                {description}
+              </p>
+            </div>
           ))}
-        </RevealGroup>
+        </div>
       </div>
     </section>
   );

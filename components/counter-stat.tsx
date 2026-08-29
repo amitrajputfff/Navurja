@@ -15,7 +15,7 @@ export function CounterStat({
 
   return (
     <div className="text-center sm:text-left">
-      <p className="text-[clamp(2.25rem,3.5vw+1rem,4rem)] font-bold tracking-tight text-white">
+      <p className="text-[clamp(1.375rem,6.5cqi+0.6rem,2.5rem)] font-bold tracking-tight whitespace-nowrap text-white">
         <span ref={ref}>0</span>
         {suffix}
       </p>

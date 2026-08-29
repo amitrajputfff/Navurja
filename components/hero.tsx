@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion } from "motion/react";
 import {
@@ -11,6 +12,7 @@ import {
   Leaf,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FlipWords } from "@/components/ui/flip-words";
 import { FloatingMetric } from "@/components/floating-metric";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
 import { HERO_METRICS } from "@/lib/constants";
@@ -36,11 +38,11 @@ export function Hero() {
     <section
       id="top"
       ref={sectionRef}
-      className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28"
+      className="relative overflow-hidden pt-16 pb-20 sm:pt-20 sm:pb-28"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[140%] bg-[radial-gradient(60%_50%_at_50%_0%,var(--color-nav-mint)_0%,var(--color-background)_65%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[140%] bg-[radial-gradient(60%_50%_at_50%_0%,var(--color-secondary)_0%,var(--color-background)_65%)]"
       />
       <div
         aria-hidden
@@ -54,9 +56,26 @@ export function Hero() {
           animate="visible"
           className="relative z-10 text-center lg:text-left"
         >
+          <motion.div
+            variants={fadeInUp}
+            className="flex items-center justify-center gap-2 lg:justify-start"
+          >
+            <Image
+              src="/logo-icon.png"
+              alt=""
+              width={40}
+              height={40}
+              className="h-10 w-10 scale-125 object-contain"
+              priority
+            />
+            <span className="text-base font-semibold tracking-tight text-nav-primary">
+              NavUrja
+            </span>
+          </motion.div>
+
           <motion.span
             variants={fadeInUp}
-            className="inline-flex items-center gap-2 rounded-full border border-nav-light-green bg-nav-mint px-3.5 py-1.5 text-xs font-medium tracking-wide text-nav-primary"
+            className="mt-5 inline-flex items-center gap-2 rounded-full border border-nav-light-green bg-nav-mint px-3.5 py-1.5 text-xs font-medium tracking-wide text-nav-primary"
           >
             <Leaf className="size-3.5" />
             Turning Waste Into Energy
@@ -67,10 +86,13 @@ export function Hero() {
             className="mt-6 text-balance text-[clamp(2.75rem,4.5vw+1.25rem,5.5rem)] font-bold leading-[0.98] tracking-tight text-nav-dark-text"
           >
             Give waste
-            <br />a new{" "}
-            <span className="bg-gradient-to-r from-nav-oil-gold to-nav-green bg-clip-text text-transparent">
-              energy.
-            </span>
+            <br />
+            a new{" "}
+            <FlipWords
+              words={["energy.", "power.", "purpose.", "life."]}
+              duration={2600}
+              className="!p-0 bg-gradient-to-r from-nav-oil-gold to-nav-green bg-clip-text align-baseline !text-transparent"
+            />
           </motion.h1>
 
           <motion.p
@@ -98,7 +120,7 @@ export function Hero() {
               nativeButton={false}
               variant="ghost"
               size="lg"
-              className="w-full rounded-full px-6 py-5 text-base text-nav-primary hover:bg-nav-mint sm:w-auto"
+              className="w-full rounded-full px-6 py-5 text-base text-nav-primary hover:bg-nav-mint sm:w-auto dark:text-nav-light-green dark:hover:bg-white/10"
             >
               See How It Works <ChevronDown className="size-4" />
             </Button>

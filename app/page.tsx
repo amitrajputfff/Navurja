@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { TrustStrip } from "@/components/trust-strip";
 import { ProblemSection } from "@/components/problem-section";
@@ -11,6 +10,9 @@ import { ImpactSection } from "@/components/impact-section";
 import { BrandStatement } from "@/components/brand-statement";
 import { FinalCta } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
+import { QuickDock } from "@/components/quick-dock";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteLogo } from "@/components/site-logo";
 
 const CircularLoop = dynamic(
   () => import("@/components/circular-loop").then((mod) => mod.CircularLoop),
@@ -22,7 +24,6 @@ const CircularLoop = dynamic(
 export default function Home() {
   return (
     <>
-      <Navbar />
       <main className="flex-1">
         <Hero />
         <TrustStrip />
@@ -37,6 +38,9 @@ export default function Home() {
         <FinalCta />
       </main>
       <Footer />
+      <QuickDock />
+      <ThemeToggle />
+      <SiteLogo />
     </>
   );
 }
