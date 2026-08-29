@@ -87,12 +87,14 @@ export function Hero() {
           >
             Give waste
             <br />
-            a new{" "}
-            <FlipWords
-              words={["energy.", "power.", "purpose.", "life."]}
-              duration={2600}
-              className="!p-0 bg-gradient-to-r from-nav-oil-gold to-nav-green bg-clip-text align-baseline !text-transparent"
-            />
+            <span className="inline-flex items-baseline justify-center gap-x-3 whitespace-nowrap lg:justify-start">
+              a new
+              <FlipWords
+                words={["energy.", "power.", "future.", "impact."]}
+                duration={2600}
+                className="!p-0 bg-gradient-to-r from-nav-oil-gold to-nav-green bg-clip-text align-baseline whitespace-nowrap !text-transparent"
+              />
+            </span>
           </motion.h1>
 
           <motion.p

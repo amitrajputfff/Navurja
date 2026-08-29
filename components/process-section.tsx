@@ -1,6 +1,6 @@
 "use client";
 
-import Carousel from "@/components/ui/carousel";
+import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
 import { HOW_IT_WORKS_STEPS } from "@/lib/constants";
 
 const STEP_SLIDES = [
@@ -11,11 +11,22 @@ const STEP_SLIDES = [
 ];
 
 export function ProcessSection() {
-  const slides = HOW_IT_WORKS_STEPS.map((step, index) => ({
-    title: `${step.number} — ${step.title}`,
-    button: STEP_SLIDES[index].tag,
-    src: STEP_SLIDES[index].image,
-  }));
+  const items = HOW_IT_WORKS_STEPS.map((step, index) => (
+    <Card
+      key={step.number}
+      index={index}
+      card={{
+        category: `${step.number} — ${STEP_SLIDES[index].tag}`,
+        title: step.title,
+        src: STEP_SLIDES[index].image,
+        content: (
+          <p className="mx-auto max-w-2xl text-base text-nav-dark-text/80 md:text-lg">
+            {step.description}
+          </p>
+        ),
+      }}
+    />
+  ));
 
   return (
     <section id="how-it-works" className="bg-secondary/20 py-24 sm:py-32">
@@ -29,8 +40,8 @@ export function ProcessSection() {
         </h2>
       </div>
 
-      <div className="mt-16">
-        <Carousel slides={slides} />
+      <div className="mt-8">
+        <Carousel items={items} />
       </div>
     </section>
   );

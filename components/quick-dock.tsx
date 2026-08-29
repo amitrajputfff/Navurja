@@ -15,6 +15,7 @@ const DOCK_ITEMS = [
         width={40}
         height={40}
         className="h-full w-full scale-125 object-contain"
+        priority
       />
     ),
     href: "#top",

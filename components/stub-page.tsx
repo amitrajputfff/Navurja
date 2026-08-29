@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { Footer } from "@/components/footer";
 import { QuickDock } from "@/components/quick-dock";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { SiteLogo } from "@/components/site-logo";
 
 export function StubPage({
   eyebrow,
@@ -29,7 +28,6 @@ export function StubPage({
       <Footer />
       <QuickDock />
       <ThemeToggle />
-      <SiteLogo />
     </>
   );
 }
