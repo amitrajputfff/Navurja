@@ -64,34 +64,34 @@
 }
 
 :root {
-  /* NavUrja brand palette */
-  --nav-primary: #0b3d2e;
-  --nav-deep-green: #073b2a;
-  --nav-green: #5faf72;
-  --nav-light-green: #bfe7c8;
-  --nav-mint: #eaf7ed;
-  --nav-oil-gold: #d9a441;
-  --nav-dark-text: #123127;
-  --nav-muted: #65756d;
+  /* NavUrja palette: grayscale base + one muted blue accent */
+  --nav-primary: #171717;
+  --nav-deep-green: #0a0a0a;
+  --nav-green: #4a6fa5;
+  --nav-light-green: #d7e3f0;
+  --nav-mint: #f5f5f5;
+  --nav-oil-gold: #8a8a8a;
+  --nav-dark-text: #111111;
+  --nav-muted: #6b6b6b;
 
-  --background: #f7faf6;
-  --foreground: #123127;
+  --background: #fafafa;
+  --foreground: #111111;
   --card: #ffffff;
-  --card-foreground: #123127;
+  --card-foreground: #111111;
   --popover: #ffffff;
-  --popover-foreground: #123127;
-  --primary: #0b3d2e;
-  --primary-foreground: #f7faf6;
-  --secondary: #eaf7ed;
-  --secondary-foreground: #0b3d2e;
-  --muted: #eaf7ed;
-  --muted-foreground: #65756d;
-  --accent: #bfe7c8;
-  --accent-foreground: #0b3d2e;
+  --popover-foreground: #111111;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #6b6b6b;
+  --accent: #d7e3f0;
+  --accent-foreground: #171717;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #dbe7dd;
-  --input: #dbe7dd;
-  --ring: #5faf72;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #4a6fa5;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -110,30 +110,30 @@
 
 .dark {
   /* Most NavUrja brand tokens are deliberately NOT overridden here — they're
-     fixed brand colors (dark green CTAs, footer, etc. stay the same
-     regardless of site theme). Only the body-text tokens invert, since their
-     whole job is to stay readable against whatever the background is. */
-  --nav-dark-text: #eaf7ed;
-  --nav-muted: #9fb3a8;
+     fixed tokens (black CTAs, footer, etc. stay the same regardless of site
+     theme). Only the body-text tokens invert, since their whole job is to
+     stay readable against whatever the background is. */
+  --nav-dark-text: #fafafa;
+  --nav-muted: #a3a3a3;
 
-  --background: #08150f;
-  --foreground: #eaf7ed;
-  --card: #0d1f17;
-  --card-foreground: #eaf7ed;
-  --popover: #0d1f17;
-  --popover-foreground: #eaf7ed;
-  --primary: #bfe7c8;
-  --primary-foreground: #08150f;
-  --secondary: #123127;
-  --secondary-foreground: #bfe7c8;
-  --muted: #123127;
-  --muted-foreground: #9fb3a8;
-  --accent: #1a4030;
-  --accent-foreground: #bfe7c8;
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #171717;
+  --card-foreground: #fafafa;
+  --popover: #171717;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #0a0a0a;
+  --secondary: #262626;
+  --secondary-foreground: #fafafa;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --accent: #1e3a5f;
+  --accent-foreground: #fafafa;
   --destructive: oklch(0.704 0.191 22.216);
   --border: color-mix(in oklab, white 12%, transparent);
   --input: color-mix(in oklab, white 15%, transparent);
-  --ring: #5faf72;
+  --ring: #6b96c7;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -162,6 +162,15 @@
 }
 
 @layer utilities {
+  .dock-glass-surface.glass-surface {
+    overflow: visible;
+  }
+
+  .dock-glass-surface .glass-surface__content {
+    padding: 0;
+    overflow: visible;
+  }
+
   .glass {
     background: color-mix(in oklab, white 62%, transparent);
     backdrop-filter: blur(20px) saturate(140%);

@@ -11,7 +11,7 @@ import {
 } from "motion/react";
 import { usePointer } from "@/hooks/use-pointer";
 
-const PARTICLE_COLORS: [string, string, string] = ["#8a978f", "#D9A441", "#5FAF72"];
+const PARTICLE_COLORS: [string, string, string] = ["#a3a3a3", "#93c5fd", "#3b82f6"];
 
 type Particle = {
   id: number;
@@ -104,11 +104,11 @@ export function OilVisual({
     >
       <div
         aria-hidden
-        className="absolute inset-[8%] -z-10 rounded-full bg-nav-oil-gold/20 blur-[70px]"
+        className="absolute inset-[8%] -z-10 rounded-full bg-blue-300/25 blur-[70px]"
       />
       <div
         aria-hidden
-        className="absolute inset-[16%] -z-10 rounded-full bg-nav-green/25 blur-[85px]"
+        className="absolute inset-[16%] -z-10 rounded-full bg-nav-green/20 blur-[85px]"
       />
 
       <motion.div
@@ -130,9 +130,9 @@ export function OilVisual({
           <svg
             viewBox="0 0 400 400"
             className="absolute inset-0 h-full w-full overflow-visible"
-            style={{ filter: "drop-shadow(0 30px 60px rgba(11,61,46,0.45))" }}
+            style={{ filter: "drop-shadow(0 30px 60px rgba(30,58,138,0.35))" }}
             role="img"
-            aria-label="A glossy golden-green droplet of used cooking oil, symbolizing it transforming into renewable energy."
+            aria-label="A glossy translucent blue droplet, symbolizing used cooking oil transforming into clean energy."
           >
             <defs>
               <filter id="particleGlow" x="-100%" y="-100%" width="300%" height="300%">
@@ -178,10 +178,10 @@ export function OilVisual({
                   }}
                 >
                   <div
-                    className="h-[220%] w-[220%] -translate-x-1/4 -translate-y-1/4"
+                    className="h-full w-full"
                     style={{
                       background:
-                        "conic-gradient(from 0deg, #073B2A 0deg, #0B3D2E 70deg, #5FAF72 150deg, #D9A441 230deg, #073B2A 300deg, #073B2A 360deg)",
+                        "linear-gradient(175deg, rgba(219,234,254,0.5) 0%, rgba(147,197,253,0.6) 35%, rgba(59,130,246,0.72) 70%, rgba(29,78,216,0.8) 100%)",
                     }}
                   />
                 </motion.div>
@@ -200,7 +200,7 @@ export function OilVisual({
                 y={0}
                 width={400}
                 height={400}
-                fill="rgba(7,59,42,0.35)"
+                fill="rgba(30,58,138,0.3)"
                 style={{ mixBlendMode: "multiply" }}
               />
             </g>

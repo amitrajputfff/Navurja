@@ -17,6 +17,7 @@ import {
 } from "motion/react";
 
 import { useRef, useState } from "react";
+import GlassSurface from "@/components/GlassSurface";
 
 export const FloatingDock = ({
   items,
@@ -99,18 +100,34 @@ const FloatingDockDesktop = ({
 }) => {
   const mouseX = useMotionValue(Infinity);
   return (
-    <motion.div
-      onMouseMove={(e) => mouseX.set(e.pageX)}
-      onMouseLeave={() => mouseX.set(Infinity)}
-      className={cn(
-        "glass mx-auto hidden h-24 items-center gap-7 rounded-full px-8 md:flex",
-        className,
-      )}
-    >
-      {items.map((item) => (
-        <IconContainer mouseX={mouseX} key={item.title} {...item} />
-      ))}
-    </motion.div>
+    <div className={cn("mx-auto hidden w-fit md:block", className)}>
+      <GlassSurface
+        width="fit-content"
+        height="fit-content"
+        borderRadius={999}
+        backgroundOpacity={0.55}
+        brightness={85}
+        opacity={0.6}
+        blur={14}
+        displace={0.5}
+        distortionScale={-35}
+        redOffset={0}
+        greenOffset={2}
+        blueOffset={4}
+        saturation={1.1}
+        className="dock-glass-surface"
+      >
+        <motion.div
+          onMouseMove={(e) => mouseX.set(e.pageX)}
+          onMouseLeave={() => mouseX.set(Infinity)}
+          className="flex items-center gap-7 px-8 py-4"
+        >
+          {items.map((item) => (
+            <IconContainer mouseX={mouseX} key={item.title} {...item} />
+          ))}
+        </motion.div>
+      </GlassSurface>
+    </div>
   );
 };
 
@@ -136,7 +153,11 @@ function IconContainer({
   const widthTransform = useTransform(distance, [-150, 0, 150], [46, 84, 46]);
   const heightTransform = useTransform(distance, [-150, 0, 150], [46, 84, 46]);
 
-  const widthTransformIcon = useTransform(distance, [-150, 0, 150], [22, 40, 22]);
+  const widthTransformIcon = useTransform(
+    distance,
+    [-150, 0, 150],
+    [22, 40, 22],
+  );
   const heightTransformIcon = useTransform(
     distance,
     [-150, 0, 150],
