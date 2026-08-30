@@ -19,11 +19,20 @@ const CircularLoop = dynamic(
   }
 );
 
+const ScrollMorphHero = dynamic(
+  () => import("@/components/scroll-morph-hero").then((mod) => mod.ScrollMorphHero),
+  {
+    ssr: false,
+    loading: () => <div className="h-screen" aria-hidden />,
+  }
+);
+
 export default function Home() {
   return (
     <>
       <main className="flex-1">
         <Hero />
+        <ScrollMorphHero />
         <ProblemSection />
         <ProcessSection />
         <PickupForm />
