@@ -53,7 +53,23 @@ const GlassSurface = ({
   const redGradId = `red-grad-${uniqueId}`;
   const blueGradId = `blue-grad-${uniqueId}`;
 
-  const [svgSupported, setSvgSupported] = useState(false);
+  const [svgSupported] = useState(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return false;
+    }
+
+    const isWebkit = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+    const isFirefox = /Firefox/.test(navigator.userAgent);
+
+    if (isWebkit || isFirefox) {
+      return false;
+    }
+
+    const div = document.createElement("div");
+    div.style.backdropFilter = `url(#${filterId})`;
+
+    return div.style.backdropFilter !== "";
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const feImageRef = useRef<SVGFEImageElement>(null);
@@ -147,28 +163,6 @@ const GlassSurface = ({
     setTimeout(updateDisplacementMap, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, height]);
-
-  const supportsSVGFilters = useCallback(() => {
-    if (typeof window === "undefined" || typeof document === "undefined") {
-      return false;
-    }
-
-    const isWebkit = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-    const isFirefox = /Firefox/.test(navigator.userAgent);
-
-    if (isWebkit || isFirefox) {
-      return false;
-    }
-
-    const div = document.createElement("div");
-    div.style.backdropFilter = `url(#${filterId})`;
-
-    return div.style.backdropFilter !== "";
-  }, [filterId]);
-
-  useEffect(() => {
-    setSvgSupported(supportsSVGFilters());
-  }, [supportsSVGFilters]);
 
   const containerStyle: CSSProperties = {
     ...style,

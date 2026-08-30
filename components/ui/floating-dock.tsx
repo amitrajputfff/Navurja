@@ -100,21 +100,26 @@ const FloatingDockDesktop = ({
 }) => {
   const mouseX = useMotionValue(Infinity);
   return (
-    <div className={cn("mx-auto hidden w-fit md:block", className)}>
+    <div
+      className={cn(
+        "mx-auto hidden w-fit rounded-full ring-1 ring-black/[0.06] shadow-[0_12px_36px_-10px_rgba(17,17,17,0.35)] dark:ring-white/10 md:block",
+        className,
+      )}
+    >
       <GlassSurface
         width="fit-content"
         height="fit-content"
         borderRadius={999}
-        backgroundOpacity={0.55}
-        brightness={85}
-        opacity={0.6}
-        blur={14}
+        backgroundOpacity={0.7}
+        brightness={90}
+        opacity={0.7}
+        blur={12}
         displace={0.5}
-        distortionScale={-35}
+        distortionScale={-25}
         redOffset={0}
-        greenOffset={2}
-        blueOffset={4}
-        saturation={1.1}
+        greenOffset={1}
+        blueOffset={2}
+        saturation={1.15}
         className="dock-glass-surface"
       >
         <motion.div

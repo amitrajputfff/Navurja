@@ -339,6 +339,7 @@ const MergedPlanes = forwardRef<THREE.Mesh, MergedPlanesProps>(({ material, widt
   useFrame((_, delta) => {
     const mat = mesh.current?.material as THREE.ShaderMaterial | undefined;
     if (mat?.uniforms?.time) {
+      // eslint-disable-next-line react-hooks/immutability -- imperative uniform mutation is the standard r3f animation pattern
       mat.uniforms.time.value += 0.1 * delta;
     }
   });
