@@ -11,19 +11,12 @@ import { FinalCta } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
 import { QuickDock } from "@/components/quick-dock";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ScrollMorphHero } from "@/components/scroll-morph-hero-loader";
 
 const CircularLoop = dynamic(
   () => import("@/components/circular-loop").then((mod) => mod.CircularLoop),
   {
     loading: () => <div className="h-[420px]" aria-hidden />,
-  }
-);
-
-const ScrollMorphHero = dynamic(
-  () => import("@/components/scroll-morph-hero").then((mod) => mod.ScrollMorphHero),
-  {
-    ssr: false,
-    loading: () => <div className="h-screen" aria-hidden />,
   }
 );
 

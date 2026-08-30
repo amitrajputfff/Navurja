@@ -167,6 +167,7 @@ function BurstParticles({ progressRef, detail }: { progressRef: React.RefObject<
     for (let i = 0; i < count; i++) {
       const v = new THREE.Vector3().randomDirection();
       pos.set([v.x, v.y, v.z], i * 3);
+      // eslint-disable-next-line react-hooks/purity -- one-time particle seed generation at mount, not a render-time value
       seed[i] = Math.random();
     }
     return [pos, seed];
