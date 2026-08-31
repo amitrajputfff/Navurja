@@ -13,6 +13,10 @@ export type Profile = {
 type AuthState = {
   session: Session | null;
   profile: Profile | null;
+  /** Set when the last profile fetch failed — distinguishes "couldn't
+   * reach the backend" from "this account genuinely has no staff role",
+   * so the UI can show a retry screen instead of a generic auth error. */
+  profileError: string | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
@@ -24,14 +28,19 @@ const AuthContext = createContext<AuthState | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function loadProfile() {
     try {
       const { user } = await apiGet<{ user: Profile }>("/api/mobile/me");
       setProfile(user);
-    } catch {
+      setProfileError(null);
+    } catch (e) {
       setProfile(null);
+      setProfileError(
+        e instanceof Error ? e.message : "Couldn't reach NavUrja — check your connection"
+      );
     }
   }
 
@@ -48,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await loadProfile();
       } else {
         setProfile(null);
+        setProfileError(null);
       }
     });
 
@@ -65,7 +75,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, profile, loading, signIn, signOut, refreshProfile: loadProfile }}>
+    <AuthContext.Provider
+      value={{ session, profile, profileError, loading, signIn, signOut, refreshProfile: loadProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );

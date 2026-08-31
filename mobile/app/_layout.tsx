@@ -41,8 +41,14 @@ function RootNavigator() {
 
   const showOnboarding = !onboardingSeen;
   const isStaff = !!profile && STAFF_ROLES.includes(profile.role);
-  const signedInNotStaff = !!session && !!profile && !isStaff;
   const authenticated = !!session && isStaff;
+  // Deliberately not `!!profile && !isStaff` — a session can exist with
+  // `profile` still null because the backend is unreachable, not because
+  // the account genuinely lacks a staff role. Bucketing both cases here
+  // (rather than falling through to the plain login screen) means a
+  // network hiccup shows an explanatory retry screen instead of silently
+  // bouncing back to login with no error, as if the password were wrong.
+  const signedInNotStaff = !!session && !authenticated;
 
   return (
     <Stack screenOptions={{ headerShown: false }}>

@@ -39,9 +39,17 @@ export default function HistoryDetailScreen() {
     };
   }, [id]);
 
+  // Declared once, outside the loading/error/success branches below — a
+  // <Stack.Screen> only inside the success branch's JSX means the title
+  // never gets set at all while loading or on error, and the header falls
+  // back to a raw route-name default ("history/[id]") for however long
+  // that lasts. Same fix applied to collect/[id].tsx.
+  const header = <Stack.Screen options={{ title: "Collection" }} />;
+
   if (loading) {
     return (
       <View style={styles.center}>
+        {header}
         <ActivityIndicator color={colors.primary} size="large" />
       </View>
     );
@@ -50,6 +58,7 @@ export default function HistoryDetailScreen() {
   if (error || !collection) {
     return (
       <View style={styles.center}>
+        {header}
         <Text style={styles.error}>{error ?? "Collection not found"}</Text>
       </View>
     );
@@ -61,7 +70,7 @@ export default function HistoryDetailScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 16, paddingBottom: 48 }}>
-      <Stack.Screen options={{ title: "Collection" }} />
+      {header}
 
       {collection.photo_url && (
         <Image source={{ uri: collection.photo_url }} style={styles.photo} />
