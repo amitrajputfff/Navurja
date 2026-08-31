@@ -108,13 +108,13 @@ export default function AboutPage() {
         <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/#pickup"
-            className="inline-flex items-center justify-center rounded-full bg-nav-primary px-5 py-2.5 text-sm font-medium text-white! transition-colors hover:bg-nav-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-nav-primary px-5 py-2.5 text-sm font-medium text-white! no-underline! transition-colors hover:bg-nav-primary/90"
           >
             Request a Pickup
           </Link>
           <Link
             href="/faqs"
-            className="inline-flex items-center justify-center rounded-full border border-nav-primary/20 px-5 py-2.5 text-sm font-medium text-nav-primary transition-colors hover:bg-white"
+            className="inline-flex items-center justify-center rounded-full border border-nav-primary/20 px-5 py-2.5 text-sm font-medium text-nav-primary no-underline! transition-colors hover:bg-white"
           >
             Read the FAQs
           </Link>

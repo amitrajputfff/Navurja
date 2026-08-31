@@ -33,7 +33,7 @@ export default function BlogPage() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group flex flex-col rounded-2xl border border-black/5 bg-white p-6 transition-shadow hover:shadow-[0_20px_40px_-24px_rgba(0,0,0,0.2)]"
+            className="group flex flex-col rounded-2xl border border-black/5 bg-white p-6 no-underline! transition-shadow hover:shadow-[0_20px_40px_-24px_rgba(0,0,0,0.2)]"
           >
             <span className="w-fit rounded-full bg-nav-light-green px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-nav-primary">
               {post.category}

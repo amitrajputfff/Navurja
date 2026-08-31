@@ -204,7 +204,12 @@
     margin-top: 1.75rem;
     margin-bottom: 0.25rem;
   }
-  .prose-navurja :where(a) {
+  /* Scoped to links inside actual running text (paragraphs/list items),
+     not `:where(a)` on the whole subtree — that broader form was also
+     catching card- and button-style <Link>s nested anywhere inside a
+     prose-navurja wrapper (e.g. a blog card, a CTA pill), underlining
+     and recoloring them along with real inline references. */
+  .prose-navurja :where(p a, li a) {
     color: var(--nav-primary);
     text-decoration: underline;
     text-underline-offset: 2px;
