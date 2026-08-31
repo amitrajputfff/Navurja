@@ -8,7 +8,7 @@ import {
   type MotionValue,
 } from "motion/react";
 
-const FRAME_START = 1;
+const FRAME_START = 50;
 const FRAME_END = 199;
 const FRAME_TOTAL = FRAME_END - FRAME_START + 1;
 const FRAME_WIDTH = 960;
