@@ -1,6 +1,5 @@
-import Image from "next/image";
-import { Reveal, RevealGroup } from "@/components/reveal";
-import { StaggerItem } from "@/components/stagger-item";
+import { Reveal } from "@/components/reveal";
+import { ExpandingCards } from "@/components/ui/expanding-cards";
 import { SOLUTIONS } from "@/lib/constants";
 
 export function SolutionsSection() {
@@ -20,40 +19,16 @@ export function SolutionsSection() {
           </p>
         </Reveal>
 
-        <RevealGroup
-          amount={0.2}
-          className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5"
-        >
-          {SOLUTIONS.map(({ title, description, icon: Icon, image }) => (
-            <StaggerItem
-              key={title}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-[0_20px_50px_-30px_rgba(11,61,46,0.25)] transition-transform duration-300 hover:-translate-y-1"
-            >
-              <div className="flex flex-col gap-1.5 p-5 pb-3">
-                <h3 className="text-lg leading-tight font-bold text-nav-primary">
-                  {title}
-                </h3>
-                <p className="text-sm text-nav-muted">{description}</p>
-              </div>
-              <div className="relative mt-auto h-48 w-full overflow-hidden sm:h-56">
-                <Image
-                  src={image}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 220px, (min-width: 640px) 33vw, 45vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-card/70"
-                />
-                <span className="absolute bottom-3 left-3 flex size-9 items-center justify-center rounded-full bg-white/90 text-nav-deep-green shadow-sm">
-                  <Icon className="size-4" strokeWidth={1.75} />
-                </span>
-              </div>
-            </StaggerItem>
-          ))}
-        </RevealGroup>
+        <Reveal delay={0.1} className="mt-14">
+          <ExpandingCards
+            items={SOLUTIONS.map(({ title, description, icon: Icon, image }) => ({
+              title,
+              description,
+              image,
+              icon: <Icon className="size-6" strokeWidth={1.75} />,
+            }))}
+          />
+        </Reveal>
       </div>
     </section>
   );
