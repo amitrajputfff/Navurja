@@ -9,6 +9,7 @@ import { BrandStatement } from "@/components/brand-statement";
 import { FinalCta } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
 import { SiteDock } from "@/components/site-dock";
+import { SiteNav } from "@/components/site-nav";
 import { CircularLoop } from "@/components/circular-loop-loader";
 
 // ScrollStage (the fixed WebGL background layer, components/scroll-stage.tsx)
@@ -20,6 +21,7 @@ import { CircularLoop } from "@/components/circular-loop-loader";
 export default function Home() {
   return (
     <>
+      <SiteNav />
       <main id="main-content" className="flex-1">
         <Hero />
         <ProblemSection />

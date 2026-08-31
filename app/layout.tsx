@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     description:
       "NavUrja collects used cooking oil and gives it a new life through responsible recycling and renewable energy.",
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
+  // No manual `icons` field — app/favicon.ico, app/icon.png, and
+  // app/apple-icon.png (Next's file-convention icons) already generate
+  // the right <link> tags automatically.
 };
 
 export const viewport: Viewport = {

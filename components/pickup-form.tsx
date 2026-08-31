@@ -27,9 +27,14 @@ import {
 } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { AddressAutocomplete } from "@/components/ui/address-autocomplete";
 import { Reveal } from "@/components/reveal";
 import { BUSINESS_TYPE_OPTIONS } from "@/lib/constants";
-import { pickupFormSchema, type PickupFormValues } from "@/lib/validations";
+import {
+  pickupFormSchema,
+  type PickupFormInput,
+  type PickupFormValues,
+} from "@/lib/validations";
 
 const HIGHLIGHTS = [
   { label: "Easy pickup", icon: Truck },
@@ -75,28 +80,31 @@ function OilDroplet() {
   );
 }
 
-/** Frontend-only for now; swap the body for a real API/server action call
- * once the backend is ready — the signature (takes the validated payload,
- * resolves or throws) is already what a real request would look like, so
- * every caller-side concern (error state, focus, toast) is already wired
- * for it. Not currently logging `values` anywhere, unlike the previous
- * implementation, which shipped a raw console.log of user PII. */
-async function submitPickupRequest(values: PickupFormValues): Promise<void> {
-  void values;
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (Math.random() < 0.05) {
-        reject(new Error("Simulated network failure"));
-        return;
-      }
-      resolve();
-    }, 700);
+/** `honeypot` is a hidden field real users never see or fill; the API
+ * route drops anything that arrives with it non-empty rather than
+ * rejecting outright, so bots get a normal-looking success response. */
+async function submitPickupRequest(
+  values: PickupFormValues,
+  honeypot: string
+): Promise<void> {
+  const response = await fetch("/api/leads", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...values, honeypot }),
   });
+
+  if (!response.ok) {
+    if (response.status === 429) {
+      throw new Error("Too many requests — please wait a moment and try again.");
+    }
+    throw new Error("Failed to submit pickup request");
+  }
 }
 
 export function PickupForm() {
   const [submitted, setSubmitted] = useState(false);
   const [dateOpen, setDateOpen] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
   const {
     register,
     handleSubmit,
@@ -104,25 +112,28 @@ export function PickupForm() {
     reset,
     setFocus,
     formState: { errors, isSubmitting },
-  } = useForm<PickupFormValues>({
+  } = useForm<PickupFormInput, unknown, PickupFormValues>({
     resolver: zodResolver(pickupFormSchema),
   });
 
   async function onSubmit(values: PickupFormValues) {
     try {
-      await submitPickupRequest(values);
+      await submitPickupRequest(values, honeypot);
       toast.success("Pickup request received. We'll be in touch shortly.");
       setSubmitted(true);
       reset();
-    } catch {
-      toast.error("Something went wrong — please try again.", {
-        description: "If this keeps happening, email hello@navurja.com directly.",
-      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error && error.message.startsWith("Too many")
+          ? error.message
+          : "Something went wrong — please try again.",
+        { description: "If this keeps happening, email hello@navurja.com directly." }
+      );
     }
   }
 
   function onInvalid(fieldErrors: typeof errors) {
-    const firstField = Object.keys(fieldErrors)[0] as keyof PickupFormValues | undefined;
+    const firstField = Object.keys(fieldErrors)[0] as keyof PickupFormInput | undefined;
     if (firstField) setFocus(firstField);
   }
 
@@ -184,6 +195,17 @@ export function PickupForm() {
                 noValidate
                 className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2"
               >
+                <input
+                  type="text"
+                  name="company"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] size-px opacity-0"
+                />
+
                 <div>
                   <Label htmlFor="name">Full Name</Label>
                   <Input
@@ -244,29 +266,41 @@ export function PickupForm() {
 
                 <div>
                   <Label htmlFor="pickupLocation">Pickup Location</Label>
-                  <Input
-                    id="pickupLocation"
-                    autoComplete="street-address"
-                    className="mt-1.5"
-                    placeholder="Your address or area"
-                    aria-invalid={!!errors.pickupLocation}
-                    aria-describedby={errors.pickupLocation ? "pickupLocation-error" : undefined}
-                    {...register("pickupLocation")}
-                  />
+                  <div className="mt-1.5">
+                    <Controller
+                      control={control}
+                      name="pickupLocation"
+                      render={({ field }) => (
+                        <AddressAutocomplete
+                          id="pickupLocation"
+                          placeholder="Your address or area"
+                          value={field.value ?? ""}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          ariaInvalid={!!errors.pickupLocation}
+                          ariaDescribedBy={errors.pickupLocation ? "pickupLocation-error" : undefined}
+                        />
+                      )}
+                    />
+                  </div>
                   <FieldError id="pickupLocation" message={errors.pickupLocation?.message} />
                 </div>
 
                 <div>
-                  <Label htmlFor="oilQuantity">Estimated Oil Quantity</Label>
+                  <Label htmlFor="oilQuantityKg">Estimated Oil Quantity (kg)</Label>
                   <Input
-                    id="oilQuantity"
+                    id="oilQuantityKg"
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    step="0.1"
                     className="mt-1.5"
-                    placeholder="e.g. 10L, 20L"
-                    aria-invalid={!!errors.oilQuantity}
-                    aria-describedby={errors.oilQuantity ? "oilQuantity-error" : undefined}
-                    {...register("oilQuantity")}
+                    placeholder="e.g. 15"
+                    aria-invalid={!!errors.oilQuantityKg}
+                    aria-describedby={errors.oilQuantityKg ? "oilQuantityKg-error" : undefined}
+                    {...register("oilQuantityKg")}
                   />
-                  <FieldError id="oilQuantity" message={errors.oilQuantity?.message} />
+                  <FieldError id="oilQuantityKg" message={errors.oilQuantityKg?.message} />
                 </div>
 
                 <div>
@@ -275,7 +309,14 @@ export function PickupForm() {
                     control={control}
                     name="businessType"
                     render={({ field }) => (
-                      <Select value={field.value} onValueChange={field.onChange}>
+                      // `field.value` is `undefined` until the user picks
+                      // something, which would make Select uncontrolled on
+                      // first render and controlled from then on — Base UI
+                      // (rightly) warns on that switch. `?? ""` keeps the
+                      // value always-defined so it's controlled from the
+                      // start; "" matches no option, so the placeholder
+                      // still shows exactly as before.
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
                         <SelectTrigger
                           id="businessType"
                           className="mt-1.5 w-full"

@@ -7,11 +7,10 @@ import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-// Dock only surfaces the core scroll sections — About and Resources (FAQ)
-// stay in the footer's full NAV_LINKS list but are dropped here per request.
-const DOCK_LINKS = NAV_LINKS.filter(
-  (link) => link.href !== "/#about" && link.href !== "/faqs"
-);
+// Dock only surfaces the core in-page scroll sections — standalone pages
+// (About, Blog, FAQs) stay in the top nav and footer's full NAV_LINKS list
+// but are dropped here per request, to keep the dock itself minimal.
+const DOCK_LINKS = NAV_LINKS.filter((link) => link.href.startsWith("/#"));
 const LINK_ICONS = [Workflow, Recycle, BarChart3];
 
 export function SiteDock() {

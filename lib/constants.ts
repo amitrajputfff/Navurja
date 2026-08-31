@@ -40,8 +40,9 @@ export const NAV_LINKS = [
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Solutions", href: "/#solutions" },
   { label: "Impact", href: "/#impact" },
-  { label: "About", href: "/#about" },
-  { label: "Resources", href: "/faqs" },
+  { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
+  { label: "FAQs", href: "/faqs" },
 ] as const;
 
 export const TRUST_MARKERS = [

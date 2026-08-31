@@ -9,9 +9,11 @@ import { newsletterSchema } from "@/lib/validations";
 
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const result = newsletterSchema.safeParse({ email });
     if (!result.success) {
@@ -19,12 +21,35 @@ export function NewsletterForm() {
       return;
     }
     setError(null);
-    toast.success("You're subscribed. Thanks for joining NavUrja.");
-    setEmail("");
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, honeypot }),
+      });
+      if (!response.ok) throw new Error("Failed to subscribe");
+      toast.success("You're subscribed. Thanks for joining NavUrja.");
+      setEmail("");
+    } catch {
+      toast.error("Something went wrong — please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2" noValidate>
+      <input
+        type="text"
+        name="company"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] size-px opacity-0"
+      />
       <div className="flex items-center gap-2">
         <Input
           type="email"
@@ -38,6 +63,7 @@ export function NewsletterForm() {
         <Button
           type="submit"
           size="icon"
+          disabled={isSubmitting}
           className="h-10 w-10 shrink-0 rounded-lg bg-nav-green text-nav-deep-green hover:bg-nav-light-green"
           aria-label="Subscribe"
         >

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion, useMotionValue, useReducedMotion } from "motion/react";
 import {
@@ -71,7 +70,7 @@ export function Hero() {
     <section
       id="top"
       ref={sectionRef}
-      className="relative overflow-hidden pt-16 pb-20 sm:pt-20 sm:pb-28"
+      className="relative overflow-hidden pt-28 pb-20 sm:pt-32 sm:pb-28"
     >
       <div
         aria-hidden
@@ -89,26 +88,12 @@ export function Hero() {
           animate="visible"
           className="relative z-10 text-center lg:text-left"
         >
-          <motion.div
-            variants={fadeInUp}
-            className="flex items-center justify-center gap-2 lg:justify-start"
-          >
-            <Image
-              src="/logo-icon.png"
-              alt=""
-              width={32}
-              height={32}
-              className="size-8 object-contain"
-              priority
-            />
-            <span className="text-base font-semibold tracking-tight text-nav-primary">
-              NavUrja
-            </span>
-          </motion.div>
-
+          {/* No repeated logo+wordmark here — SiteNav (fixed above the
+              hero) already owns that mark, so this starts straight at the
+              badge to avoid stacking two identical NavUrja marks on load. */}
           <motion.span
             variants={fadeInUp}
-            className="mt-5 inline-flex items-center gap-2 rounded-full border border-nav-light-green bg-nav-mint px-3.5 py-1.5 text-xs font-medium tracking-wide text-nav-primary"
+            className="inline-flex items-center gap-2 rounded-full border border-nav-light-green bg-nav-mint px-3.5 py-1.5 text-xs font-medium tracking-wide text-nav-primary"
           >
             <Leaf className="size-3.5" />
             Turning Waste Into Energy
