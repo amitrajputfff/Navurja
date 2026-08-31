@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Footer } from "@/components/footer";
 import { SiteDock } from "@/components/site-dock";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 export function StubPage({
   eyebrow,
@@ -27,7 +26,6 @@ export function StubPage({
       </main>
       <Footer />
       <SiteDock />
-      <ThemeToggle />
     </>
   );
 }

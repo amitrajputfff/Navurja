@@ -9,7 +9,6 @@ import { BrandStatement } from "@/components/brand-statement";
 import { FinalCta } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
 import { SiteDock } from "@/components/site-dock";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { CircularLoop } from "@/components/circular-loop-loader";
 
 // ScrollStage (the fixed WebGL background layer, components/scroll-stage.tsx)
@@ -35,7 +34,6 @@ export default function Home() {
       </main>
       <Footer />
       <SiteDock />
-      <ThemeToggle />
     </>
   );
 }

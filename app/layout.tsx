@@ -54,10 +54,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f8f4" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e241c" },
-  ],
+  themeColor: "#f2f8f4",
   width: "device-width",
   initialScale: 1,
 };
@@ -76,7 +73,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        {/* Site is light-mode only (no toggle) — forcedTheme keeps
+            next-themes' consumers (e.g. the toast styling in
+            components/ui/sonner.tsx) resolving to "light" regardless of
+            OS preference or any stored value. */}
+        <ThemeProvider attribute="class" forcedTheme="light">
           <TooltipProvider delay={150}>
             {children}
             <Toaster position="bottom-right" richColors />

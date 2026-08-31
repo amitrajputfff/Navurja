@@ -232,21 +232,3 @@
   }
 }
 
-/* Theme-toggle view transition (components/ui/animated-theme-toggler.tsx):
-   disable the browser's default cross-fade so the JS-driven clip-path wipe is
-   what's visible, sync the transition-group duration to the toggler's chosen
-   duration, and pin the new-root snapshot at its collapsed clip-path so
-   Firefox never paints it unclipped before the WAAPI animation takes over. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-group(root) {
-  animation-duration: var(--magicui-theme-toggle-vt-duration, 400ms);
-}
-
-html[data-magicui-theme-vt="active"] ::view-transition-new(root) {
-  clip-path: var(--magicui-theme-vt-clip-from, none);
-}
