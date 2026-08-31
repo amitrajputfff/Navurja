@@ -1,27 +1,23 @@
 // One-off asset pipeline: takes the raw `ezgif-frame-NNN.png` sequence (a
 // glow/bloom render on a near-black background, no alpha channel) and
-// produces a lightweight, properly-keyed WebP sequence at
-// `public/hero-frames/frame-NNN.webp` for the hero's scroll-driven canvas.
+// produces a lightweight WebP sequence at `public/hero-frames/frame-NNN.webp`
+// for the hero's scroll-driven canvas.
 //
-// This footage is additive glow rendered onto black — every pixel's own
-// brightness *is* how much light it is, which is exactly what premultiplied
-// alpha compositing onto a black backdrop looks like. So alpha = max(r,g,b)
-// directly, and color is recovered by unpremultiplying (rgb * 255 / alpha).
-// Two earlier approaches were tried and both left artifacts on this
-// footage: (1) flood-filling from the border so only background reachable
-// from the edge got keyed left "enclosed" dark regions (e.g. the interior
-// of the ring-shaped frame) as an opaque black patch; (2) a smoothstepped
-// LOW/HIGH threshold band left a visible dim, semi-opaque "shadow halo"
-// around frames with a wide soft glow, because a wide mid-brightness band
-// stayed mostly-opaque while still carrying its dim, un-brightened color.
-// Direct premultiply unprojection has neither problem: a dim halo pixel
-// gets a low alpha *and* its color is boosted back to true brightness by
-// the unpremultiply, so it reads as "a little bit of bright light," not
-// "a dark, half-see-through smudge."
+// No alpha keying here — the frames are drawn on a plain opaque background
+// and composited onto the page with CSS `mix-blend-mode: screen`
+// (hero-frame-sequence.tsx), not canvas transparency. Screen blending is
+// the physically correct way to composite an additive glow/bloom render:
+// a black pixel contributes nothing to whatever's behind it and a bright
+// pixel adds light, which — unlike alpha-blending a "keyed" translucent
+// color — looks right against *any* backdrop color, light or dark, with
+// no halo smudge, no lost interior shading, and no edge fringing. Three
+// earlier keying approaches (border-flood-fill, threshold+smoothstep,
+// direct premultiply) all fought this same problem because alpha-over
+// compositing is fundamentally the wrong operation for additive light.
 //
 // Run: node scripts/process-hero-frames.mjs
 // (safe to re-run — reads from public/ first, falls back to the archive
-// dir so already-archived raw sources can be reprocessed with new tuning)
+// dir so already-archived raw sources can be reprocessed)
 
 import sharp from "sharp";
 import { readdir, mkdir, rename } from "node:fs/promises";
@@ -34,45 +30,17 @@ const ARCHIVE_DIR = path.join(ROOT, ".design-reference/hero-frames-src");
 const OUT_DIR = path.join(ROOT, "public/hero-frames");
 
 const TARGET_WIDTH = 960;
-const NOISE_FLOOR = 3; // brightness at/below this -> fully transparent (kills near-zero compression noise)
+// Optional bounds (inclusive) so a trimmed frame range — e.g. the earliest
+// frames were deliberately dropped from the shipped sequence — can be
+// reprocessed without regenerating (and re-shipping) frames outside it.
+const FRAME_MIN = process.env.FRAME_MIN ? Number(process.env.FRAME_MIN) : null;
+const FRAME_MAX = process.env.FRAME_MAX ? Number(process.env.FRAME_MAX) : null;
 
-async function keyFrame(srcPath) {
-  const { data, info } = await sharp(srcPath)
+async function processFrame(srcPath, outPath) {
+  await sharp(srcPath)
     .resize({ width: TARGET_WIDTH })
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-
-  const { width, height, channels } = info;
-  const n = width * height;
-  const out = Buffer.alloc(n * 4);
-
-  for (let p = 0; p < n; p++) {
-    const si = p * channels;
-    const oi = p * 4;
-    const r = data[si];
-    const g = data[si + 1];
-    const b = data[si + 2];
-    const a = r > g ? (r > b ? r : b) : g > b ? g : b;
-
-    if (a <= NOISE_FLOOR) {
-      out[oi] = 0;
-      out[oi + 1] = 0;
-      out[oi + 2] = 0;
-      out[oi + 3] = 0;
-    } else if (a >= 255) {
-      out[oi] = r;
-      out[oi + 1] = g;
-      out[oi + 2] = b;
-      out[oi + 3] = 255;
-    } else {
-      out[oi] = Math.min(255, Math.round((r * 255) / a));
-      out[oi + 1] = Math.min(255, Math.round((g * 255) / a));
-      out[oi + 2] = Math.min(255, Math.round((b * 255) / a));
-      out[oi + 3] = a;
-    }
-  }
-
-  return sharp(out, { raw: { width, height, channels: 4 } });
+    .webp({ quality: 82 })
+    .toFile(outPath);
 }
 
 async function findSourceDir() {
@@ -108,6 +76,12 @@ async function main() {
       return match ? { file: f, number: match[1] } : null;
     })
     .filter((x) => x !== null)
+    .filter(({ number }) => {
+      const n = Number(number);
+      if (FRAME_MIN !== null && n < FRAME_MIN) return false;
+      if (FRAME_MAX !== null && n > FRAME_MAX) return false;
+      return true;
+    })
     .sort((a, b) => a.number.localeCompare(b.number));
 
   await mkdir(OUT_DIR, { recursive: true });
@@ -117,9 +91,8 @@ async function main() {
 
   for (const { file, number } of files) {
     const srcPath = path.join(srcDir, file);
-    const image = await keyFrame(srcPath);
     const outPath = path.join(OUT_DIR, `frame-${number}.webp`);
-    await image.webp({ quality: 82, alphaQuality: 90 }).toFile(outPath);
+    await processFrame(srcPath, outPath);
     if (archiving) {
       await rename(srcPath, path.join(ARCHIVE_DIR, file));
     }

@@ -153,6 +153,13 @@ export function HeroFrameSequence({
         height={FRAME_HEIGHT}
         role="img"
         aria-label="An animated droplet of used cooking oil swirling into green energy as you scroll, resolving into NavUrja's leaf mark."
+        // The frames are a glow/bloom render on black with no alpha channel.
+        // `screen` blending (not canvas transparency) is what makes the
+        // black contribute nothing and the glow add light onto whatever's
+        // behind it — the only compositing that looks correct on both a
+        // light and a dark page background instead of leaving a visible
+        // rectangular smudge in dark mode.
+        style={{ mixBlendMode: "screen" }}
         className={`h-full w-full transition-opacity duration-500 ${
           ready ? "opacity-100" : "opacity-0"
         }`}
