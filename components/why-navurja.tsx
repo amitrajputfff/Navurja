@@ -1,6 +1,4 @@
-import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/reveal";
-import { Highlighter } from "@/components/ui/highlighter";
 import { WHY_NAVURJA } from "@/lib/constants";
 
 export function WhyNavurja() {
@@ -12,22 +10,25 @@ export function WhyNavurja() {
             Better for your business.
             <br />
             Better for the{" "}
-            <Highlighter action="highlight" color="#BFE7C8" padding={4} isView>
-              <span className="text-nav-primary">planet</span>
-            </Highlighter>
+            <span className="relative inline-block whitespace-nowrap text-nav-primary">
+              <span className="absolute inset-x-0 bottom-0.5 -z-10 h-[0.4em] rounded-sm bg-nav-light-green" />
+              planet
+            </span>
             .
           </h2>
         </Reveal>
 
-        <div className="relative z-10 mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {WHY_NAVURJA.map(({ title, description, icon: Icon }, index) => (
+        {/* Shared-border grid: the container draws the top/left edge, every
+            cell draws its own right/bottom edge — this produces a correct
+            divider grid at any column count without indexing into rows, so
+            it doesn't go missing at md's 2 columns or leave a stray edge at
+            lg's 3 (both real bugs the previous index-based `lg:`-only
+            conditionals had). */}
+        <div className="relative z-10 mt-16 grid grid-cols-1 border-t border-l border-border/70 md:grid-cols-2 lg:grid-cols-3">
+          {WHY_NAVURJA.map(({ title, description, icon: Icon }) => (
             <div
               key={title}
-              className={cn(
-                "group/feature relative flex flex-col border-border/70 py-10 lg:border-r",
-                (index === 0 || index === 3) && "lg:border-l",
-                index < 3 && "lg:border-b"
-              )}
+              className="group/feature relative flex flex-col border-r border-b border-border/70 py-10"
             >
               <div className="pointer-events-none absolute inset-0 h-full w-full bg-gradient-to-b from-nav-mint to-transparent opacity-0 transition duration-300 group-hover/feature:opacity-100" />
               <div className="relative z-10 mb-4 px-8 text-nav-primary">

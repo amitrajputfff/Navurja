@@ -2,82 +2,43 @@ import Image from "next/image";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
-import { LinkedinIcon, InstagramIcon, YoutubeIcon, XIcon } from "@/components/social-icons";
-import { FOOTER_COLUMNS } from "@/lib/constants";
-
-const SOCIALS = [
-  { icon: LinkedinIcon, label: "LinkedIn", href: "https://linkedin.com" },
-  { icon: InstagramIcon, label: "Instagram", href: "https://instagram.com" },
-  { icon: XIcon, label: "X", href: "https://x.com" },
-  { icon: YoutubeIcon, label: "YouTube", href: "https://youtube.com" },
-];
+import { NAV_LINKS, SOCIALS } from "@/lib/constants";
 
 export function Footer() {
   return (
-    <footer id="site-footer" className="relative overflow-hidden bg-nav-deep-green pt-20">
-      <div className="relative mx-auto max-w-6xl px-6">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
-          <div>
-            <Link href="#top" className="flex items-center gap-2">
-              <Image
-                src="/logo-icon.png"
-                alt="NavUrja"
-                width={30}
-                height={30}
-                className="h-7 w-7 scale-125 object-contain"
-              />
-              <span className="text-base font-semibold tracking-tight text-white">
-                NavUrja
-              </span>
-            </Link>
-            <p className="mt-4 max-w-[26ch] text-sm text-white/55">
-              New Energy. New Possibility.
-            </p>
-            <a
-              href="mailto:hello@navurja.com"
-              className="mt-4 inline-block text-sm font-medium text-nav-light-green underline-offset-4 hover:underline"
-            >
-              hello@navurja.com
-            </a>
+    <footer id="site-footer" className="relative overflow-hidden bg-nav-deep-green pt-20 pb-6">
+      <div className="relative mx-auto max-w-3xl px-6">
+        <div className="flex flex-col items-center text-center">
+          <Link
+            href="/"
+            aria-label="NavUrja home"
+            className="mb-6 flex size-16 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/15"
+          >
+            <Image
+              src="/logo-icon.png"
+              alt=""
+              width={32}
+              height={32}
+              className="size-8 object-contain"
+            />
+          </Link>
 
-            <div className="mt-8 max-w-xs">
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/40">
-                Stay in the loop
-              </p>
-              <div className="mt-3">
-                <NewsletterForm />
-              </div>
-            </div>
-          </div>
+          <nav
+            aria-label="Footer"
+            className="mb-8 flex flex-wrap justify-center gap-x-6 gap-y-2"
+          >
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm text-white/70 transition-colors hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-          {FOOTER_COLUMNS.map((column) => (
-            <div key={column.heading}>
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/40">
-                {column.heading}
-              </p>
-              <ul className="mt-4 flex flex-col gap-3">
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-white/70 transition-colors hover:text-white"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-16 border-t border-white/10" />
-
-        <div className="flex flex-col-reverse items-center justify-between gap-4 py-6 sm:flex-row">
-          <p className="text-xs text-white/40">
-            &copy; {new Date().getFullYear()} NavUrja. All rights reserved.
-          </p>
-          <div className="flex items-center gap-1">
+          <div className="mb-8 flex items-center gap-2">
             {SOCIALS.map(({ icon: Icon, label, href }) => (
               <a
                 key={label}
@@ -85,18 +46,41 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex size-9 items-center justify-center rounded-full text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                className="flex size-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/30 hover:bg-white/5 hover:text-white"
               >
                 <Icon className="size-4" />
               </a>
             ))}
+          </div>
+
+          <div className="mb-10 w-full max-w-sm">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-white/40">
+              Stay in the loop
+            </p>
+            <NewsletterForm />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-white/40">
+            <span>&copy; {new Date().getFullYear()} NavUrja. All rights reserved.</span>
+            <Link href="/privacy" className="transition-colors hover:text-white/70">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="transition-colors hover:text-white/70">
+              Terms of Service
+            </Link>
+            <a
+              href="mailto:hello@navurja.com"
+              className="transition-colors hover:text-white/70"
+            >
+              hello@navurja.com
+            </a>
           </div>
         </div>
       </div>
 
       <div
         aria-hidden
-        className="relative -mt-6 h-32 select-none sm:h-40 lg:h-48"
+        className="relative -mt-2 h-32 select-none sm:h-40 lg:h-48"
       >
         <TextHoverEffect text="NAVURJA" />
       </div>

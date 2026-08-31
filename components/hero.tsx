@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { motion } from "motion/react";
+import { motion, useMotionValue, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   ChevronDown,
@@ -14,25 +14,58 @@ import {
 import { Button } from "@/components/ui/button";
 import { FlipWords } from "@/components/ui/flip-words";
 import { FloatingMetric } from "@/components/floating-metric";
-import { useScrollProgress } from "@/hooks/use-scroll-progress";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { HERO_METRICS } from "@/lib/constants";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 
-const OilVisual = dynamic(
-  () => import("@/components/oil-visual").then((mod) => mod.OilVisual),
+const HeroFrameSequence = dynamic(
+  () =>
+    import("@/components/hero-frame-sequence").then(
+      (mod) => mod.HeroFrameSequence
+    ),
   {
     ssr: false,
     loading: () => (
-      <div className="mx-auto aspect-square w-full max-w-[380px] animate-pulse rounded-full bg-nav-mint sm:max-w-[440px] lg:max-w-[520px]" />
+      <div className="mx-auto aspect-video w-full max-w-[560px] animate-pulse rounded-3xl bg-nav-mint sm:max-w-[620px] lg:max-w-[640px]" />
     ),
   },
 );
 
 const METRIC_ICONS = [Droplets, Building2, Leaf];
+const METRIC_POSITIONS = [
+  "absolute -left-4 top-6 lg:-left-10",
+  "absolute -right-2 top-1/2 -translate-y-1/2 lg:-right-8",
+  "absolute bottom-2 left-1/2 -translate-x-1/2 lg:left-8 lg:translate-x-0",
+];
+const METRIC_DELAYS = [0.5, 0.65, 0.8];
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const scrollProgress = useScrollProgress(sectionRef);
+  const scrollProgress = useMotionValue(0);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Pin the hero in place for an extended scroll range so the full frame
+  // sequence actually gets watched rather than blown through in the ~1
+  // viewport-height the section naturally occupies. Reduced motion skips the
+  // pin entirely and lets the page scroll normally past a static frame.
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "+=200%",
+        pin: true,
+        anticipatePin: 1,
+        scrub: 0.6,
+        onUpdate: (self) => scrollProgress.set(self.progress),
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [prefersReducedMotion, scrollProgress]);
 
   return (
     <section
@@ -63,9 +96,9 @@ export function Hero() {
             <Image
               src="/logo-icon.png"
               alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10 scale-125 object-contain"
+              width={32}
+              height={32}
+              className="size-8 object-contain"
               priority
             />
             <span className="text-base font-semibold tracking-tight text-nav-primary">
@@ -113,7 +146,7 @@ export function Hero() {
               render={<a href="#pickup" />}
               nativeButton={false}
               size="lg"
-              className="w-full rounded-full bg-nav-primary px-6 py-5 text-base text-white hover:bg-nav-deep-green sm:w-auto"
+              className="w-full rounded-full px-6 py-5 text-base sm:w-auto"
             >
               Request a Pickup <ArrowRight className="size-4" />
             </Button>
@@ -130,32 +163,20 @@ export function Hero() {
         </motion.div>
 
         <div className="relative">
-          <OilVisual progress={scrollProgress} />
+          <HeroFrameSequence progress={scrollProgress} />
 
           <div className="pointer-events-none absolute inset-0 hidden sm:block">
-            <FloatingMetric
-              icon={METRIC_ICONS[0]}
-              label={HERO_METRICS[0].label}
-              value={HERO_METRICS[0].value}
-              unit={HERO_METRICS[0].unit}
-              delay={0.5}
-              className="absolute -left-4 top-6 lg:-left-10"
-            />
-            <FloatingMetric
-              icon={METRIC_ICONS[1]}
-              label={HERO_METRICS[1].label}
-              value={HERO_METRICS[1].value}
-              delay={0.65}
-              className="absolute -right-2 top-1/2 -translate-y-1/2 lg:-right-8"
-            />
-            <FloatingMetric
-              icon={METRIC_ICONS[2]}
-              label={HERO_METRICS[2].label}
-              value={HERO_METRICS[2].value}
-              unit={HERO_METRICS[2].unit}
-              delay={0.8}
-              className="absolute bottom-2 left-1/2 -translate-x-1/2 lg:left-8 lg:translate-x-0"
-            />
+            {HERO_METRICS.map((metric, index) => (
+              <FloatingMetric
+                key={metric.label}
+                icon={METRIC_ICONS[index]}
+                label={metric.label}
+                value={metric.value}
+                unit={metric.unit}
+                delay={METRIC_DELAYS[index]}
+                className={METRIC_POSITIONS[index]}
+              />
+            ))}
           </div>
         </div>
       </div>

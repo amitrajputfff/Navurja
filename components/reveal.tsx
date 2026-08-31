@@ -1,8 +1,28 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
+import { motion, type TargetAndTransition, type Variants } from "motion/react";
 import type { ReactNode } from "react";
-import { fadeInUp } from "@/lib/animations";
+import { cn } from "@/lib/utils";
+import { fadeInUp, staggerContainer } from "@/lib/animations";
+
+/**
+ * Motion resolves a variant's own `transition` (if the target state defines
+ * one) *over* the component-level `transition` prop — so passing `delay` as
+ * a sibling prop alongside a variant that already carries a transition (every
+ * variant in lib/animations.ts does) silently drops the delay. This merges
+ * it into the variant's own transition instead, so `delay` actually applies.
+ */
+function withDelay(variants: Variants, delay: number): Variants {
+  if (!delay) return variants;
+  const visible = variants.visible as TargetAndTransition | undefined;
+  return {
+    ...variants,
+    visible: {
+      ...visible,
+      transition: { ...visible?.transition, delay },
+    },
+  };
+}
 
 export function Reveal({
   children,
@@ -22,9 +42,8 @@ export function Reveal({
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount }}
-      variants={variants}
-      transition={{ delay }}
-      className={className}
+      variants={withDelay(variants, delay)}
+      className={cn(className)}
     >
       {children}
     </motion.div>
@@ -49,11 +68,8 @@ export function RevealGroup({
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount }}
-      variants={{
-        hidden: {},
-        visible: { transition: { staggerChildren, delayChildren } },
-      }}
-      className={className}
+      variants={staggerContainer(staggerChildren, delayChildren)}
+      className={cn(className)}
     >
       {children}
     </motion.div>

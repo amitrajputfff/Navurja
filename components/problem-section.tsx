@@ -1,46 +1,43 @@
-"use client";
-
-import { MoveHorizontal } from "lucide-react";
-import { Compare } from "@/components/ui/compare";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { ImageCompare } from "@/components/ui/image-compare";
 import { Reveal } from "@/components/reveal";
 import { scaleIn } from "@/lib/animations";
 
 export function ProblemSection() {
   return (
-    <section id="approach" className="py-24 sm:py-32">
-      <div className="mx-auto max-w-4xl px-6 text-center">
-        <Reveal>
-          <h2 className="text-balance text-[clamp(1.875rem,2.5vw+1rem,3rem)] font-bold tracking-tight text-nav-dark-text">
-            Cooking oil doesn&apos;t have to end in the drain.
-          </h2>
-          <p className="mt-4 text-lg text-nav-muted">
-            Used cooking oil is valuable when it&apos;s collected and handled
-            responsibly &mdash; not poured away.
+    <section id="problem" className="py-24 sm:py-32">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2 lg:gap-16">
+        <Reveal className="text-center lg:text-left">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-nav-muted">
+            The Problem
           </p>
+          <h2 className="mt-3 text-balance text-[clamp(1.875rem,2.5vw+1rem,3rem)] font-bold tracking-tight text-nav-dark-text">
+            Cooking oil doesn&apos;t have to end{" "}
+            <span className="text-nav-green">in the drain</span>.
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-lg text-nav-muted lg:mx-0">
+            Used cooking oil poured down the drain causes blocked pipes,
+            water pollution, and harm to marine life.
+          </p>
+          <Link
+            href="/#how-it-works"
+            className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-nav-primary transition-colors hover:text-nav-green"
+          >
+            Learn More <ArrowRight className="size-4" />
+          </Link>
         </Reveal>
 
-        <Reveal variants={scaleIn} delay={0.1} className="mt-14">
+        <Reveal variants={scaleIn} delay={0.1}>
           <div className="relative mx-auto w-full max-w-xl overflow-hidden rounded-[2rem] border border-border shadow-[0_30px_80px_-30px_rgba(11,61,46,0.3)]">
-            <Compare
-              firstImage="/compare-old-way.svg"
-              secondImage="/compare-new-way.svg"
-              firstImageClassName="object-cover"
-              secondImageClassname="object-cover"
-              className="aspect-[4/3] w-full rounded-[2rem]"
-              slideMode="hover"
-              autoplay
-              autoplayDuration={4000}
+            <ImageCompare
+              beforeSrc="/problem.png"
+              afterSrc="/solution.png"
+              beforeAlt="Used cooking oil poured down a kitchen drain, clogging it with residue"
+              afterAlt="NavUrja's drain-safe solution keeping pipes clean and the water clear"
+              className="aspect-[3/2] rounded-[2rem]"
             />
-            <span className="pointer-events-none absolute top-4 left-4 z-30 rounded-full bg-black/40 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
-              The old way
-            </span>
-            <span className="pointer-events-none absolute top-4 right-4 z-30 rounded-full bg-nav-primary/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
-              The NavUrja way
-            </span>
           </div>
-          <p className="mt-4 flex items-center justify-center gap-1.5 text-xs font-medium text-nav-muted">
-            <MoveHorizontal className="size-3.5" /> Drag to see the difference
-          </p>
         </Reveal>
       </div>
     </section>

@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import { Hero } from "@/components/hero";
 import { ProblemSection } from "@/components/problem-section";
 import { ProcessSection } from "@/components/process-section";
@@ -9,23 +8,21 @@ import { ImpactSection } from "@/components/impact-section";
 import { BrandStatement } from "@/components/brand-statement";
 import { FinalCta } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
-import { QuickDock } from "@/components/quick-dock";
+import { SiteDock } from "@/components/site-dock";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ScrollMorphHero } from "@/components/scroll-morph-hero-loader";
+import { CircularLoop } from "@/components/circular-loop-loader";
 
-const CircularLoop = dynamic(
-  () => import("@/components/circular-loop").then((mod) => mod.CircularLoop),
-  {
-    loading: () => <div className="h-[420px]" aria-hidden />,
-  }
-);
+// ScrollStage (the fixed WebGL background layer, components/scroll-stage.tsx)
+// is deliberately not mounted right now — paused at the user's request while
+// its behavior gets sorted out. The component itself is untouched, just not
+// rendered here; re-add `<ScrollStage />` above `<SiteDock />` to bring it
+// back once it's ready.
 
 export default function Home() {
   return (
     <>
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <Hero />
-        <ScrollMorphHero />
         <ProblemSection />
         <ProcessSection />
         <PickupForm />
@@ -37,7 +34,7 @@ export default function Home() {
         <FinalCta />
       </main>
       <Footer />
-      <QuickDock />
+      <SiteDock />
       <ThemeToggle />
     </>
   );

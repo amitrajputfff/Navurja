@@ -4,7 +4,7 @@ import { Reveal } from "@/components/reveal";
 
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-nav-primary py-24 sm:py-32">
+    <section id="final-cta" className="relative overflow-hidden bg-nav-deep-green py-24 sm:py-32">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/2 size-[600px] -translate-x-1/2 rounded-full bg-nav-green/25 blur-[140px]"
@@ -33,7 +33,7 @@ export function FinalCta() {
             render={<a href="#pickup" />}
             nativeButton={false}
             size="lg"
-            className="w-full rounded-full bg-white px-6 py-5 text-base text-nav-primary hover:bg-nav-mint sm:w-auto"
+            className="w-full rounded-full bg-white px-6 py-5 text-base text-nav-deep-green hover:bg-nav-light-green sm:w-auto"
           >
             Request a Pickup <ArrowRight className="size-4" />
           </Button>

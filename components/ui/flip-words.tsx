@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, LayoutGroup } from "motion/react";
+import React, { useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 export const FlipWords = ({
@@ -14,6 +14,7 @@ export const FlipWords = ({
 }) => {
   const [currentWord, setCurrentWord] = useState(words[0]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const prefersReducedMotion = useReducedMotion();
 
   // thanks for the fix Julian - https://github.com/Julian-AT
   const startAnimation = useCallback(() => {
@@ -23,11 +24,14 @@ export const FlipWords = ({
   }, [currentWord, words]);
 
   useEffect(() => {
-    if (!isAnimating)
-      setTimeout(() => {
-        startAnimation();
-      }, duration);
-  }, [isAnimating, duration, startAnimation]);
+    if (prefersReducedMotion || isAnimating) return;
+    // Cleared on unmount/re-run — previously this scheduled a new timer on
+    // every cycle with nothing ever clearing the old one, so a fast
+    // unmount mid-cycle (or React StrictMode's double-invoke) left it
+    // firing setCurrentWord on an unmounted component.
+    const timeout = setTimeout(startAnimation, duration);
+    return () => clearTimeout(timeout);
+  }, [isAnimating, duration, startAnimation, prefersReducedMotion]);
 
   return (
     <AnimatePresence

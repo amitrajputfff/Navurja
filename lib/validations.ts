@@ -12,7 +12,12 @@ export const pickupFormSchema = z.object({
   phone: z
     .string()
     .trim()
-    .regex(INDIAN_PHONE_REGEX, "Enter a valid Indian phone number"),
+    // Strip spaces/hyphens before matching — the field's own placeholder
+    // ("98765 43210") is a spaced number, and the regex only ever allowed a
+    // space after a "+91" prefix, so the UI was suggesting input it would
+    // then reject.
+    .transform((value) => value.replace(/[\s-]/g, ""))
+    .pipe(z.string().regex(INDIAN_PHONE_REGEX, "Enter a valid Indian phone number")),
   email: z.email("Enter a valid email address"),
   oilQuantity: z.string().trim().min(1, "Approx. quantity is required"),
   pickupLocation: z.string().trim().min(5, "Enter a pickup address"),
@@ -20,6 +25,7 @@ export const pickupFormSchema = z.object({
     (date) => date.getTime() >= new Date().setHours(0, 0, 0, 0),
     "Pickup date can't be in the past"
   ),
+  message: z.string().trim().max(500, "Keep it under 500 characters").optional(),
 });
 
 export type PickupFormValues = z.infer<typeof pickupFormSchema>;

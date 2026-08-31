@@ -2,6 +2,7 @@
 
 import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { fadeInUp } from "@/lib/animations";
 
 export function StaggerItem({
@@ -14,7 +15,7 @@ export function StaggerItem({
   className?: string;
 }) {
   return (
-    <motion.div variants={variants} className={className}>
+    <motion.div variants={variants} className={cn(className)}>
       {children}
     </motion.div>
   );

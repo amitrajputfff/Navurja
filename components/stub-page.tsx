@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Footer } from "@/components/footer";
-import { QuickDock } from "@/components/quick-dock";
+import { SiteDock } from "@/components/site-dock";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function StubPage({
@@ -14,7 +14,7 @@ export function StubPage({
 }) {
   return (
     <>
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="mx-auto max-w-3xl px-6 pt-24 pb-28">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-nav-green">
             {eyebrow}
@@ -26,7 +26,7 @@ export function StubPage({
         </section>
       </main>
       <Footer />
-      <QuickDock />
+      <SiteDock />
       <ThemeToggle />
     </>
   );

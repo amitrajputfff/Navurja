@@ -3,7 +3,7 @@ import { scaleIn } from "@/lib/animations";
 
 export function BrandStatement() {
   return (
-    <section className="py-28 sm:py-40">
+    <section id="about" className="py-24 sm:py-32">
       <div className="mx-auto max-w-4xl px-6 text-center">
         <Reveal variants={scaleIn}>
           <h2 className="text-balance text-[clamp(2.25rem,5vw+1rem,5rem)] font-bold leading-[1.05] tracking-tight text-nav-dark-text">
